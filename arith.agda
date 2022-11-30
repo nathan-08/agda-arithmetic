@@ -1,5 +1,6 @@
 open import Data.Nat
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality as Eq
+open Eq.≡-Reasoning
 
 +-assoc : ∀ (m n p : ℕ) → m + n + p ≡ m + (n + p)
 +-assoc zero n p = refl
@@ -46,3 +47,37 @@ open import Relation.Binary.PropositionalEquality
                      | sym (+-assoc (m + n) (m * p) (n * p))
                      | +-comm (m + n) (m * p)
                      | +-assoc (m * p) m n = refl
+
+*-assoc : ∀ (m n p : ℕ) → (m * n) * p ≡ m * (n * p)
+*-assoc zero n p = refl
+*-assoc (suc m) n p rewrite *-distrib-+ n (m * n) p
+                            | *-assoc m n p = refl
+
+-- prove commutativity of multiplication using rewrite
+*-comm : ∀ (m n : ℕ) → m * n ≡ n * m
+*-comm zero n rewrite *-zeroᴿ n = refl
+*-comm (suc m) n rewrite *-simplify n m | *-comm m n = refl
+
+-- alternate method using equivalence reasoning rather than rewrite
+*-comm′ : ∀ (m n : ℕ) → m * n ≡ n * m
+-- base case: 0 * n = n * 0
+*-comm′ zero n =
+  begin
+    zero * n
+  ≡⟨⟩
+    zero
+  ≡⟨ sym (*-zeroᴿ n) ⟩
+    n * zero
+  ∎
+-- now prove that (suc m) * n ≡ n * (suc m)
+*-comm′ (suc m) n =
+  begin
+    suc m * n
+  ≡⟨⟩
+    n + m * n
+  ≡⟨ cong ( n +_ ) (*-comm m n) ⟩
+    n + n * m
+  ≡⟨ sym (*-simplify n m) ⟩
+    n * (suc m)
+  ∎
+    
