@@ -25,6 +25,17 @@ open Eq.≡-Reasoning
 *-zeroᴿ zero = refl
 *-zeroᴿ (suc n) rewrite *-zeroᴿ n = refl
 
+*-zeroᴿ′ : ∀ (n : ℕ) → n * zero ≡ zero
+*-zeroᴿ′ zero = refl
+*-zeroᴿ′ (suc n) =
+  begin
+    (suc n) * zero
+  ≡⟨⟩
+    zero + n * zero
+  ≡⟨ *-zeroᴿ′ n ⟩
+    zero
+  ∎
+
 *-identityᴿ : ∀ (n : ℕ) → n * 1 ≡ n
 *-identityᴿ zero = refl
 *-identityᴿ (suc n) rewrite *-identityᴿ n = refl
@@ -35,6 +46,9 @@ open Eq.≡-Reasoning
                 | sym (+-assoc m n (m * n))
                 | +-comm m n
                 | +-assoc n m (m * n) = refl
+
+*-distrib-+′ : ∀ (n m : ℕ) → (suc n) * m ≡ m + n * m
+*-distrib-+′ n m = begin (suc n) * m ≡⟨⟩ m + n * m ∎
 
 *-distrib-+ : ∀ (m n p : ℕ) → (m + n) * p ≡ m * p + n * p
 *-distrib-+ m n zero rewrite *-zeroᴿ m | *-zeroᴿ n | *-zeroᴿ (m + n) = refl
@@ -47,6 +61,23 @@ open Eq.≡-Reasoning
                      | sym (+-assoc (m + n) (m * p) (n * p))
                      | +-comm (m + n) (m * p)
                      | +-assoc (m * p) m n = refl
+
+*-distrib-+″ : ∀ (m n p : ℕ) → (m + n) * p ≡ m * p + n * p
+*-distrib-+″ zero n p = refl
+*-distrib-+″ (suc m) n p =
+  begin
+    (suc m + n) * p
+  ≡⟨⟩
+    suc (m + n) * p
+  ≡⟨⟩
+    p + ((m + n) * p)
+  ≡⟨ cong (p +_) (*-distrib-+″ m n p) ⟩
+    p + (m * p + n * p)
+  ≡⟨ sym (+-assoc p (m * p) (n * p)) ⟩
+    p + m * p + n * p
+  ≡⟨⟩
+    suc m * p + n * p
+  ∎
 
 *-assoc : ∀ (m n p : ℕ) → (m * n) * p ≡ m * (n * p)
 *-assoc zero n p = refl
