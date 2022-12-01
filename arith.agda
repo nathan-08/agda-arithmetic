@@ -112,3 +112,33 @@ open Eq.≡-Reasoning
     n * (suc m)
   ∎
     
+∸-lemma₁ : ∀ (n : ℕ) → zero ∸ n ≡ zero
+∸-lemma₁ zero = refl
+∸-lemma₁ (suc n) = refl
+
+
+∸-lemma₂ : ∀ (m n : ℕ) → m ∸ suc n ≡ pred (m ∸ n)
+∸-lemma₂ m zero = refl
+∸-lemma₂ zero (suc n) = refl
+∸-lemma₂ (suc m) (suc n) rewrite ∸-lemma₂ m n = refl
+
+∸-+-assoc : ∀ (m n p : ℕ) → m ∸ n ∸ p ≡ m ∸ (n + p)
+∸-+-assoc m n zero = 
+  begin
+    m ∸ n
+  ≡⟨ cong (m ∸_) (sym (+-identityᴿ n)) ⟩
+    m ∸ (n + zero)
+  ∎
+∸-+-assoc m n (suc p) = 
+  begin
+    m ∸ n ∸ suc p
+  ≡⟨ (∸-lemma₂ (m ∸ n) p) ⟩
+    pred (m ∸ n ∸ p)
+  ≡⟨ cong pred (∸-+-assoc m n p) ⟩
+    pred (m ∸ (n + p))
+  ≡⟨ sym (∸-lemma₂ m (n + p)) ⟩
+    m ∸ suc (n + p)
+  ≡⟨ cong (m ∸_) (sym (+-suc n p)) ⟩
+    m ∸ (n + suc p)
+  ∎
+
