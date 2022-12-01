@@ -116,7 +116,6 @@ open Eq.≡-Reasoning
 ∸-lemma₁ zero = refl
 ∸-lemma₁ (suc n) = refl
 
-
 ∸-lemma₂ : ∀ (m n : ℕ) → m ∸ suc n ≡ pred (m ∸ n)
 ∸-lemma₂ m zero = refl
 ∸-lemma₂ zero (suc n) = refl
@@ -141,4 +140,3 @@ open Eq.≡-Reasoning
   ≡⟨ cong (m ∸_) (sym (+-suc n p)) ⟩
     m ∸ (n + suc p)
   ∎
-
