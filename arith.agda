@@ -140,3 +140,13 @@ open Eq.≡-Reasoning
   ≡⟨ cong (m ∸_) (sym (+-suc n p)) ⟩
     m ∸ (n + suc p)
   ∎
+
+^-suc : ∀ (m n : ℕ) → m ^ (suc n) ≡ m * m ^ n
+^-suc m n = refl
+
+^-distribᴸ-+-* : ∀ (m n p : ℕ) → m ^ (n + p) ≡ (m ^ n) * (m ^ p)
+^-distribᴸ-+-* m n zero rewrite +-identityᴿ n | *-identityᴿ (m ^ n) = refl
+^-distribᴸ-+-* m n (suc p) rewrite ^-suc m p
+                        | sym (*-assoc (m ^ n) m (m ^ p))
+                        | *-comm (m ^ n) m
+                        | sym (+-suc n p) = {!!}
